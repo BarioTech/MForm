@@ -27,10 +27,12 @@ exports.cadastrarUsuario = async (req, res) => { // C create
     })
 
     await plano.save() 
+    console.log("NEw plano", plano)
+
     const usuario = new usuarioModel({
-        idMacom: "moc1xcdsadassfk", 
+        idMacom: req.body.idMacom, 
         numeroProntuario: req.body.formData.numeroProntuario,
-        senha: req.body.formData.password, 
+        senha: req.body.formData.senha, 
         email: req.body.formData.email, 
         nome: req.body.formData.nome, 
         cpf: req.body.formData.cpf,
@@ -62,7 +64,7 @@ exports.cadastrarUsuario = async (req, res) => { // C create
     })
 
     await usuario.save()
-
+    console.log("NEw usuario", usuario)
     return res.status(201).send(usuario)
 }
 
@@ -146,7 +148,6 @@ exports.listUsuarios = async (req, res) => {
 exports.obterRelatorio = async (req, res, next) => {
     console.log("teste")
     try {
-        console.log("INFERNO")
         const alunos = req.body.alunos;
         let dadosAlunos = await usuarioModel.find({}).populate('endereco').populate('plano');
         const dados = dadosAlunos.map(usuario => { 
