@@ -185,50 +185,48 @@ exports.obterRelatorio = async (req, res, next) => {
             };
         });
 
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Relatório');
-        console.log(dados)
+        // Definir as colunas para o CSV
+        const csvWriter = createCsvWriter({
+            path: path.join(__dirname, 'relatorio.csv'),
+            header: [
+                { id: 'nome', title: 'Nome' },
+                { id: 'email', title: 'E-mail' },
+                { id: 'cpf', title: 'CPF' },
+                { id: 'id_macom', title: 'ID Maçom' },
+                { id: 'telefone', title: 'Telefone' },
+                { id: 'nome_contato_emergencia', title: 'Nome Contato de Emergencia' },
+                { id: 'telefone_contato_emergencia', title: 'Telefone Contato de Emergencia' },
+                { id: 'parentesco', title: 'Parentesco' },
+                { id: 'peso', title: 'Peso' },
+                { id: 'altura', title: 'Altura' },
+                { id: 'pressao', title: 'Pressão' },
+                { id: 'imc', title: 'IMC' },
+                { id: 'condicao_fisica', title: 'Condição Física' },
+                { id: 'numero_cartao_plano', title: 'Nº Cartao Plano' },
+                { id: 'hospital_preferencia', title: 'Hospital Preferência' },
+                { id: 'observacao_medica', title: 'Observação Médica' },
+                { id: 'rua', title: 'Rua' },
+                { id: 'cidade', title: 'Cidade' },
+                { id: 'plano', title: 'Plano' },
+                { id: 'doencas', title: 'Doenças' },
+                { id: 'alergias', title: 'Alergias' },
+                { id: 'cirurgias', title: 'Cirurgias' },
+                { id: 'internacoes', title: 'Internações' },
+                { id: 'medicamentos', title: 'Medicamentos' }
+            ]
+        });
 
-        worksheet.columns = [
-            { header: 'Nome', key: 'nome', width: 35 },
-            { header: 'E-mail', key: 'email', width: 35 },
-            { header: 'CPF', key: 'cpf', width: 15 },
-            { header: 'ID Maçom', key: 'id_macom', width: 15 },
-            { header: 'Telefone', key: 'telefone', width: 15 },
-            { header: 'Nome Contato de Emergencia', key: 'nome_contato_emergencia', width: 25 },
-            { header: 'Telefone Contato de Emergencia', key: 'telefone_contato_emergencia', width: 20 },
-            { header: 'Parentesco', key: 'parentesco', width: 15 },
-            { header: 'Peso', key: 'peso', width: 10 },
-            { header: 'Altura', key: 'altura', width: 10 },
-            { header: 'Pressão', key: 'pressao', width: 10 },
-            { header: 'IMC', key: 'imc', width: 10 },
-            { header: 'Condição Física', key: 'condicao_fisica', width: 20 },
-            { header: 'Nº Cartao Plano', key: 'numero_cartao_plano', width: 20 },
-            { header: 'Hospital Preferência', key: 'hospital_preferencia', width: 20 },
-            { header: 'Observação Médica', key: 'observacao_medica', width: 30 },
-            { header: 'Rua', key: 'rua', width: 35 },
-            { header: 'Cidade', key: 'cidade', width: 20 },
-            { header: 'Plano', key: 'plano', width: 15 },
-            { header: 'Doenças', key: 'doencas', width: 30 },
-            { header: 'Alergias', key: 'alergias', width: 30 },
-            { header: 'Cirurgias', key: 'cirurgias', width: 30 },
-            { header: 'Internações', key: 'internacoes', width: 30 },
-            { header: 'Medicamentos', key: 'medicamentos', width: 30 }
-        ];
+        // Escrever os dados no CSV
+        await csvWriter.writeRecords(dados);
 
-        // Adicionar dados
-        worksheet.addRows(dados);
-
-        const filePath = path.join(__dirname, 'relatorio.xlsx');
-        await workbook.xlsx.writeFile(filePath);
-
+        // Enviar o arquivo CSV
+        const filePath = path.join(__dirname, 'relatorio.csv');
         return res.sendFile(filePath);
     } catch (error) {
         console.error('Erro ao gerar relatório:', error);
         res.status(500).send('Erro ao gerar relatório');
     }
 };
-
 
 // exports.obterRelatorio = async (req, res, next) => {
 //     try {
