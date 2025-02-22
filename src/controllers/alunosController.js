@@ -30,7 +30,7 @@ exports.cadastrarUsuario = async (req, res) => { // C create
     console.log("NEw plano", plano)
 
     const usuario = new usuarioModel({
-        idMacom: req.body.idMacom, 
+        idMacom: req.body.formData.idMacom, 
         numeroProntuario: req.body.formData.numeroProntuario,
         senha: req.body.formData.senha, 
         email: req.body.formData.email, 
